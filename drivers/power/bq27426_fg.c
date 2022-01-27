@@ -143,20 +143,22 @@ static struct batt_chem_id batt_chem_id_arr[] = {
 	{1202, FG_SUBCMD_CHEM_B},
 	{3142, FG_SUBCMD_CHEM_C},
 };
+
 struct bq_batt_ids {
 	int kohm;
 	const char *battery_type;
 };
 
-static struct bq_batt_ids bq_batt_ids_attr[] = {
+static struct bq_batt_ids bq_batt_ids_attr[]={
 	{30, "wingtech-Desay-4v4-3000mah"},
 	{68, "wingtech-Scud-4v4-3000mah"},
 	{330, "wingtech-Sunwoda-4v4-3000mah"},
 	{82, "wingtech-Atl-4v4-3000mah"},
 };
 
+
 struct fg_batt_profile {
-	const bqfs_cmd_t *bqfs_image;
+	const bqfs_cmd_t * bqfs_image;
 	u32				   array_size;
 	u8				   version;
 };
@@ -521,7 +523,7 @@ static void fg_print_buf(const char *msg, u8 *buf, u8 len)
 	u8 strbuf[128];
 
 	pr_err("%s buf: ", msg);
-	for (i = 0; i < len; i++) {
+	for(i = 0; i < len; i++) {
 		num = sprintf(&strbuf[idx], "%02X ", buf[i]);
 		idx += num;
 	}
@@ -622,7 +624,7 @@ static int fg_unseal(struct bq_fg_chip *bq, u32 key)
 		msleep(100);
 	}
 
-	return -EPERM;
+	return -1;
 }
 
 
@@ -722,7 +724,7 @@ static int fg_check_itpor(struct bq_fg_chip *bq)
 }
 
 
-static int fg_read_dm_version(struct bq_fg_chip *bq, u8 *ver)
+static int fg_read_dm_version(struct bq_fg_chip* bq, u8 *ver)
 {
 	int ret;
 	u16 dm_code = 0;
@@ -769,7 +771,7 @@ static int fg_dm_pre_access(struct bq_fg_chip *bq)
 
 	pr_err("Failed to enter cfgupdate mode\n");
 
-	return -EPERM;
+	return -1;
 }
 EXPORT_SYMBOL_GPL(fg_dm_pre_access);
 
@@ -795,7 +797,7 @@ static int fg_dm_post_access(struct bq_fg_chip *bq)
 
 	if (i == CFG_UPDATE_POLLING_RETRY_LIMIT) {
 		pr_err("Failed to exit cfgupdate mode\n");
-		return -EPERM;
+		return -1;
 	} else {
 		return fg_seal(bq);
 	}
@@ -943,6 +945,7 @@ static int fg_read_status(struct bq_fg_chip *bq)
 	return 0;
 }
 
+
 static int fg_get_charger_present(struct bq_fg_chip *bq)
 {
 	union power_supply_propval prop = {0,};
@@ -983,15 +986,17 @@ static int fg_read_new_rsoc(struct bq_fg_chip *bq)
 
 	new_soc = fg_read_rsoc(bq);
 	fg_get_charger_present(bq);
-	if (!monitor_soc_up && bq->usb_present && (new_soc == 100 && (bq->batt_soc >= 90 && bq->batt_soc <= 98))){
+	if(!monitor_soc_up && bq->usb_present && (new_soc == 100 && (bq->batt_soc >= 90 && bq->batt_soc <= 98))){
 		pr_err("soc jumped, new_soc = %d, old_soc = %d\n", new_soc, bq->batt_soc);
 		monitor_soc_up = 1;
 		monitor_soc_down = 0;
-		kt = ns_to_ktime(CYCLE_DETECT_TIME*NSEC_PER_SEC);
+
+		kt = ns_to_ktime(((u64)CYCLE_DETECT_TIME)*((u64)NSEC_PER_SEC));
+
 		alarm_start_relative(&bq->fg_soc_alarm, kt);
 	}
 
-	if (monitor_soc_up || monitor_soc_down){
+	if(monitor_soc_up || monitor_soc_down){
 	}else{
 		monitor_soc = new_soc;
 	}
@@ -1022,32 +1027,35 @@ static void fg_soc_work_fn(struct work_struct *work)
 	real_soc = fg_read_rsoc(bq);
 
 	fg_get_charger_present(bq);
-	if (monitor_soc_up && bq->usb_present){
+	if(monitor_soc_up && bq->usb_present){
 		monitor_soc += 1;
 		monitor_soc = (monitor_soc <= 100) ? monitor_soc: 100;
 	}
 
 	pr_err("fg_soc_work_fn  monitor_soc = %d\n", monitor_soc);
-	if (!bq->usb_present && monitor_soc <= 99){
+	if(!bq->usb_present && monitor_soc <= 99){
 		pr_err("fg_soc_work_fn fg_soc_work_fn monitor_soc_down\n");
 		monitor_soc_down = 1;
 		monitor_soc_up = 0;
 	}
-	if (monitor_soc == 100 || real_soc <= monitor_soc){
+	if(monitor_soc == 100 || real_soc <= monitor_soc){
 		pr_err("fg_soc_work_fn  alarm stop\n");
 		monitor_soc_up = 0;
-		monitor_soc_down = 0;
+		monitor_soc_down= 0;
 	}
 
 	power_supply_changed(&bq->fg_psy);
 
-	if (monitor_soc_down || monitor_soc_up){
-		kt = ns_to_ktime(CYCLE_DETECT_TIME*NSEC_PER_SEC);
+	if(monitor_soc_down || monitor_soc_up){
+
+		kt = ns_to_ktime(((u64)CYCLE_DETECT_TIME)*((u64)NSEC_PER_SEC));
+
 		alarm_start_relative(&bq->fg_soc_alarm, kt);
 	}
 
 	pm_relax(bq->dev);
 }
+
 
 #define DEFAULT_TEMP 2980
 static int fg_read_temperature(struct bq_fg_chip *bq)
@@ -1061,17 +1069,22 @@ static int fg_read_temperature(struct bq_fg_chip *bq)
 		return ret;
 	}
 
+
 #ifdef CONFIG_DISABLE_TEMP_PROTECT
 	pr_err("Disable temp control Version!\n");
 	return DEFAULT_TEMP;
 #else
 	return temp;
 #endif
+
 }
+
 #define DEFAULT_RESISTER 45
 static int fg_get_battid_resister(struct bq_fg_chip *bq)
 {
+
 	int rc = 0;
+	u64 div1 = 0;
 	int bq_battid_resister = 0;
 	struct qpnp_vadc_result results;
 
@@ -1081,7 +1094,9 @@ static int fg_get_battid_resister(struct bq_fg_chip *bq)
 		return DEFAULT_RESISTER;
 	}
 
-	bq_battid_resister = (results.physical)*100/(1800000 - results.physical);
+	div1 = (u64)(results.physical*100);
+	do_div(div1, (1800000 - results.physical));
+	bq_battid_resister = (int)div1;
 
 	return bq_battid_resister;
 }
@@ -1099,7 +1114,7 @@ static char *bq_default_batt_type = "Generic_Battery";
 	for (i = 0; i < ARRAY_SIZE(bq_batt_ids_attr); i++) {
 		delta = abs(bq_batt_ids_attr[i].kohm - batt_id_kohm);
 		limit = (bq_batt_ids_attr[i].kohm * id_range_pct) / 100;
-		if (delta <= limit){
+		if(delta <= limit){
 			best_id_kohm = bq_batt_ids_attr[i].kohm;
 			bq->battery_type = bq_batt_ids_attr[i].battery_type;
 			goto out;
@@ -1114,19 +1129,20 @@ out:
 	pr_err("%s found\n", bq->battery_type);
 	hardwareinfo_set_prop(HARDWARE_BATTERY_ID, bq->battery_type);
 
-	if (best_id_kohm == 30){
+	if(best_id_kohm == 30){
 		bq->batt_id = 1;
-	}else if (best_id_kohm == 68){
+	}else if(best_id_kohm == 68){
 		bq->batt_id = 2;
-	}else if (best_id_kohm == 330){
+	}else if(best_id_kohm == 330){
 		bq->batt_id = 3;
-	}else if (best_id_kohm == 82){
+	}else if(best_id_kohm == 82){
 		bq->batt_id = 4;
 	}else
 		bq->batt_id = 0;
 
 	return 0;
 }
+
 
 static int fg_read_volt(struct bq_fg_chip *bq)
 {
@@ -1227,7 +1243,7 @@ static int fg_read_cyclecount(struct bq_fg_chip *bq)
 
 	if (bq->regs[BQ_FG_REG_CC] == INVALID_REG_ADDR) {
 		pr_err("Cycle Count not supported!\n");
-		return -EPERM;
+		return -1;
 	}
 
 	ret = fg_read_word(bq, bq->regs[BQ_FG_REG_CC], &cc);
@@ -1247,7 +1263,7 @@ static int fg_read_tte(struct bq_fg_chip *bq)
 
 	if (bq->regs[BQ_FG_REG_TTE] == INVALID_REG_ADDR) {
 		pr_err("Time To Empty not supported!\n");
-		return -EPERM;
+		return -1;
 	}
 
 	ret = fg_read_word(bq, bq->regs[BQ_FG_REG_TTE], &tte);
@@ -1262,6 +1278,7 @@ static int fg_read_tte(struct bq_fg_chip *bq)
 
 	return tte;
 }
+
 static int fg_get_batt_status(struct bq_fg_chip *bq)
 {
 	union power_supply_propval prop = {0,};
@@ -1285,6 +1302,7 @@ static int fg_get_batt_status(struct bq_fg_chip *bq)
 		return POWER_SUPPLY_STATUS_NOT_CHARGING;
 
 }
+
 
 static int fg_get_batt_capacity_level(struct bq_fg_chip *bq)
 {
@@ -1667,7 +1685,7 @@ static bool fg_update_bqfs_execute_cmd(struct bq_fg_chip *bq,
 			return false;
 		if (memcmp(tmp_buf, cmd->data.bytes, cmd->data_len)) {
 			pr_info("CMD_C failed at line %d\n", cmd->line_num);
-			for (i = 0; i < cmd->data_len; i++) {
+			for(i = 0; i < cmd->data_len; i++) {
 				pr_err("Read: %02X, Cmp:%02X", tmp_buf[i], cmd->data.bytes[i]);
 			}
 			return false;
@@ -1738,6 +1756,7 @@ static void fg_update_bqfs(struct bq_fg_chip *bq)
 }
 EXPORT_SYMBOL_GPL(fg_update_bqfs);
 
+
 static const u8 fg_dump_regs[] = {
 	0x00, 0x02, 0x04, 0x06,
 	0x08, 0x0A, 0x0C, 0x0E,
@@ -1747,11 +1766,12 @@ static const u8 fg_dump_regs[] = {
 	0x66, 0x68, 0x6C, 0x6E,
 	0x70,
 };
+
 static void fg_dump_registers(struct bq_fg_chip *bq)
 {
 	int i;
 	int ret;
-	u16 val = 0;
+	u16 val=0;
 
 	if (bq->batt_present) {
 		mutex_lock(&bq->update_lock);
@@ -1777,6 +1797,8 @@ static void fg_dump_registers(struct bq_fg_chip *bq)
 	printk("\n");
 }
 EXPORT_SYMBOL_GPL(fg_dump_registers);
+
+
 static int show_registers(struct seq_file *m, void *data)
 {
 	struct bq_fg_chip *bq = m->private;
@@ -1940,6 +1962,7 @@ static ssize_t fg_attr_store_update(struct device *dev,
 	}
 	return count;
 }
+
 static ssize_t fg_attr_show_dmcode(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -1970,6 +1993,7 @@ static struct attribute *fg_attributes[] = {
 	&dev_attr_dmcode.attr,
 	NULL,
 };
+
 
 static const struct attribute_group fg_attr_group = {
 	.attrs = fg_attributes,
@@ -2031,6 +2055,7 @@ static void fg_update_bqfs_workfunc(struct work_struct *work)
 
 		fg_update_bqfs(bq);
 }
+
 static irqreturn_t fg_irq_thread(int irq, void *dev_id)
 {
 	struct bq_fg_chip *bq = dev_id;
@@ -2069,7 +2094,7 @@ static irqreturn_t fg_irq_thread(int irq, void *dev_id)
 	pr_info("itpor=%d, cfg_mode = %d, seal_state=%d, batt_present=%d",
 			bq->itpor, bq->cfg_update_mode, bq->seal_state, bq->batt_present);
 
-	if (!last_batt_present && bq->batt_present) {/* battery inserted */
+	if (!last_batt_present && bq->batt_present ) {/* battery inserted */
 		pr_info("Battery inserted\n");
 	} else if (last_batt_present && !bq->batt_present) {/* battery removed */
 		pr_info("Battery removed\n");
@@ -2101,6 +2126,7 @@ static irqreturn_t fg_irq_thread(int irq, void *dev_id)
 
 	return IRQ_HANDLED;
 }
+
 
 static void determine_initial_status(struct bq_fg_chip *bq)
 {
@@ -2265,11 +2291,13 @@ static int bq_fg_probe(struct i2c_client *client,
 	struct bq_fg_chip *bq;
 	struct power_supply *usb_psy;
 	u8 *regs;
+
 	usb_psy = power_supply_get_by_name("usb");
 	if (!usb_psy) {
 		dev_dbg(&client->dev, "USB supply not found, defer probe\n");
 		return -EPROBE_DEFER;
 	}
+
 	bq = devm_kzalloc(&client->dev, sizeof(*bq), GFP_KERNEL);
 
 	if (!bq) {
