@@ -13,8 +13,8 @@
 
 &int_codec {
 	status = "okay";
-	qcom,model = "msm8953-snd-card-mtp";
-	qcom,msm-hs-micbias-type = "internal";
+	qcom,model = "msm8952-snd-card-mtp";
+	qcom,msm-hs-micbias-type = "external";
 };
 
 &pm8953_diangu_dig {
@@ -26,17 +26,17 @@
 };
 
 &wsa881x_i2c_e {
-	status = "okay";
+	status = "disabled";
 };
 
 &wsa881x_i2c_44 {
-	status = "okay";
+	status = "disabled";
 };
 
 &wsa881x_i2c_f {
-	status = "okay";
+	status = "disabled";
 };
 
 &wsa881x_i2c_45 {
-	status = "okay";
+	status = "disabled";
 };

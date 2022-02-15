@@ -22,6 +22,12 @@
 #include "dsi-panel-r69006-1080p-cmd.dtsi"
 #include "dsi-panel-truly-wuxga-video.dtsi"
 
+#include "dsi-panel-gx_rm67198_amoled_1080p_video.dtsi"
+#include "dsi-panel-hh_rm67191_amoled_1080p_video.dtsi"
+#include "dsi-panel-sharp_ft8716_fhd_video.dtsi"
+#include "dsi-panel-shenchao_ft8716_fhd_video.dtsi"
+#include "dsi-panel-td4310_tianma_fhd_video.dtsi"
+
 &soc {
 	dsi_panel_pwr_supply: dsi_panel_pwr_supply {
 		#address-cells = <1>;

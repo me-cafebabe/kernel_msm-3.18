@@ -40,6 +40,10 @@
 				qcom,pon-type = <0>;
 				qcom,pull-up = <1>;
 				linux,code = <116>;
+				qcom,s1-timer = <0x1180>;
+				qcom,s2-timer = <0x7d0>;
+				qcom,s2-type = <0x8>;
+				qcom,support-reset = <0x1>;
 			};
 
 			qcom,pon_2 {
@@ -150,7 +154,9 @@
 			gpio@c700 {
 				reg = <0xc700 0x100>;
 				qcom,pin-num = <8>;
-				status = "disabled";
+				qcom,mode = <0x0>;
+				qcom,pull = <0x5>;
+				status = "okay";
 			};
 		};
 
