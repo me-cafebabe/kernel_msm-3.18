@@ -3,7 +3,6 @@
  *
  * Copyright 2002 Hewlett-Packard Company
  * Copyright 2005-2008 Pierre Ossman
- * Copyright (C) 2018 XiaoMi, Inc.
  *
  * Use consistent with the GNU GPL is permitted,
  * provided that this copyright notice is
@@ -3461,7 +3460,6 @@ static inline int mmc_blk_cmdq_part_switch(struct mmc_card *card,
 	struct mmc_host *host = card->host;
 	struct mmc_cmdq_context_info *ctx = &host->cmdq_ctx;
 	u8 part_config = card->ext_csd.part_config;
-	int ret = 0, err = 0;
 
 	if ((main_md->part_curr == md->part_type) &&
 	    (card->part_curr == md->part_type))
@@ -3471,70 +3469,40 @@ static inline int mmc_blk_cmdq_part_switch(struct mmc_card *card,
 		 card->ext_csd.cmdq_support &&
 		 (md->flags & MMC_BLK_CMD_QUEUE)));
 
-	if (!test_bit(CMDQ_STATE_HALT, &ctx->curr_state)) {
-		ret = mmc_cmdq_halt(host, true);
-		if (ret) {
-			pr_err("%s: %s: halt: failed: %d\n",
-				mmc_hostname(host), __func__,  ret);
-			goto out;
-		}
-	}
+	if (!test_bit(CMDQ_STATE_HALT, &ctx->curr_state))
+		WARN_ON(mmc_cmdq_halt(host, true));
 
 	/* disable CQ mode in card */
 	if (mmc_card_cmdq(card)) {
-		ret = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+		WARN_ON(mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 				 EXT_CSD_CMDQ, 0,
-				 card->ext_csd.generic_cmd6_time);
-		if (ret) {
-			pr_err("%s: %s: cmdq mode disable failed %d\n",
-				mmc_hostname(host), __func__, ret);
-			goto cmdq_unhalt;
-		}
+				  card->ext_csd.generic_cmd6_time));
 		mmc_card_clr_cmdq(card);
 	}
 
 	part_config &= ~EXT_CSD_PART_CONFIG_ACC_MASK;
 	part_config |= md->part_type;
 
-	ret = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+	WARN_ON(mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 			 EXT_CSD_PART_CONFIG, part_config,
-			 card->ext_csd.part_time);
-	if (ret) {
-		pr_err("%s: %s: mmc_switch failure, %d -> %d , err = %d\n",
-			mmc_hostname(host), __func__, main_md->part_curr,
-			md->part_type, ret);
-		goto cmdq_switch;
-	}
+			  card->ext_csd.part_time));
 
 	card->ext_csd.part_config = part_config;
 	card->part_curr = md->part_type;
 
 	main_md->part_curr = md->part_type;
 
-cmdq_switch:
-	err = mmc_blk_cmdq_switch(card, md, true);
-	if (err) {
-		pr_err("%s: %s: mmc_blk_cmdq_switch failed: %d\n",
-			mmc_hostname(host), __func__,  err);
-		ret = err;
-	}
-cmdq_unhalt:
-	err = mmc_cmdq_halt(host, false);
-	if (err) {
-		pr_err("%s: %s: unhalt: failed: %d\n",
-			mmc_hostname(host), __func__,  err);
-		ret = err;
-	}
-out:
-	return ret;
+	WARN_ON(mmc_blk_cmdq_switch(card, md, true));
+	WARN_ON(mmc_cmdq_halt(host, false));
+
+	return 0;
 }
 
 static int mmc_blk_cmdq_issue_rq(struct mmc_queue *mq, struct request *req)
 {
-	int ret, err = 0;
+	int ret;
 	struct mmc_blk_data *md = mq->data;
 	struct mmc_card *card = md->queue.card;
-	struct mmc_host *host = card->host;
 	unsigned int cmd_flags = req ? req->cmd_flags : 0;
 
 	mmc_get_card(card);
@@ -3556,20 +3524,9 @@ static int mmc_blk_cmdq_issue_rq(struct mmc_queue *mq, struct request *req)
 
 	ret = mmc_blk_cmdq_part_switch(card, md);
 	if (ret) {
-		pr_err("%s: %s: partition switch failed %d, resetting cmdq\n",
+		pr_err("%s: %s: partition switch failed %d\n",
 				md->disk->disk_name, __func__, ret);
-
-		mmc_blk_cmdq_reset(host, false);
-		err = mmc_blk_cmdq_part_switch(card, md);
-		if (!err) {
-			pr_err("%s: %s: partition switch success err = %d\n",
-				md->disk->disk_name, __func__, err);
-		} else {
-			pr_err("%s: %s: partition switch failed err = %d\n",
-				md->disk->disk_name, __func__, err);
-			ret = 0;
-			goto out;
-		}
+		goto out;
 	}
 
 	if (req) {
@@ -3759,7 +3716,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
 	INIT_LIST_HEAD(&md->part);
 	md->usage = 1;
 
-	ret = mmc_init_queue(&md->queue, card, NULL, subname, area_type);
+	ret = mmc_init_queue(&md->queue, card, &md->lock, subname, area_type);
 	if (ret)
 		goto err_putdisk;
 
@@ -4056,10 +4013,6 @@ static const struct mmc_fixup blk_fixups[] =
 	MMC_FIXUP("SEM32G", CID_MANFID_SANDISK, 0x100, add_quirk,
 		  MMC_QUIRK_INAND_CMD38),
 
-	MMC_FIXUP(CID_NAME_ANY, CID_MANFID_ANY, CID_OEMID_ANY,
-		  add_quirk_mmc, MMC_QUIRK_BROKEN_CLK_GATING),
-
-
 	/*
 	 * Some MMC cards experience performance degradation with CMD23
 	 * instead of CMD12-bounded multiblock transfers. For now we'll
@@ -4146,11 +4099,6 @@ static const struct mmc_fixup blk_fixups[] =
 	MMC_FIXUP("VZL00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
 		  MMC_QUIRK_SEC_ERASE_TRIM_BROKEN),
 
-	MMC_FIXUP("Q3J96R", CID_MANFID_MICRON, CID_OEMID_ANY, add_quirk_mmc,
-		  MMC_QUIRK_BROKEN_CLK_GATING),
-
-	MMC_FIXUP("Q3J97V", CID_MANFID_MICRON, CID_OEMID_ANY, add_quirk_mmc,
-		  MMC_QUIRK_BROKEN_CLK_GATING),
 	END_FIXUP
 };
 
@@ -4166,10 +4114,6 @@ static int mmc_blk_probe(struct mmc_card *card)
 		return -ENODEV;
 
 	mmc_fixup_device(card, blk_fixups);
-
-	if (mmc_card_mmc(card)) {
-		pr_info("card->quirks = 0x%x\n", card->quirks);
-	}
 
 	md = mmc_blk_alloc(card);
 	if (IS_ERR(md))

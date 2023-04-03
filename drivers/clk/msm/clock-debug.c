@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2007 Google, Inc.
  * Copyright (c) 2007-2014, The Linux Foundation. All rights reserved.
- * Copyright (C) 2018 XiaoMi, Inc.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -35,7 +34,7 @@ static LIST_HEAD(clk_list);
 static DEFINE_MUTEX(clk_list_lock);
 
 static struct dentry *debugfs_base;
-static u32 debug_suspend = 1;
+static u32 debug_suspend;
 
 static int clock_debug_rate_set(void *data, u64 val)
 {
