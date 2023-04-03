@@ -714,8 +714,16 @@ int mmc_queue_suspend(struct mmc_queue *mq, int wait)
 
 		if (wait) {
 
-
-			blk_cleanup_queue(q);
+			/*
+			 * After blk_stop_queue is called, wait for all
+			 * active_reqs to complete.
+			 * Then wait for cmdq thread to exit before calling
+			 * cmdq shutdown to avoid race between issuing
+			 * requests and shutdown of cmdq.
+			 */
+			spin_lock_irqsave(q->queue_lock, flags);
+			blk_stop_queue(q);
+			spin_unlock_irqrestore(q->queue_lock, flags);
 
 			if (host->cmdq_ctx.active_reqs)
 				wait_for_completion(
@@ -740,15 +748,16 @@ int mmc_queue_suspend(struct mmc_queue *mq, int wait)
 	}
 
 	if (!(test_and_set_bit(MMC_QUEUE_SUSPENDED, &mq->flags))) {
-		if (!wait) {
-			spin_lock_irqsave(q->queue_lock, flags);
-			blk_stop_queue(q);
-			spin_unlock_irqrestore(q->queue_lock, flags);
-		} else {
-			blk_cleanup_queue(q);
-		}
+		spin_lock_irqsave(q->queue_lock, flags);
+		blk_stop_queue(q);
+		spin_unlock_irqrestore(q->queue_lock, flags);
+
 		rc = down_trylock(&mq->thread_sem);
 		if (rc && !wait) {
+			/*
+			 * Failed to take the lock so better to abort the
+			 * suspend because mmcqd thread is processing requests.
+			 */
 			clear_bit(MMC_QUEUE_SUSPENDED, &mq->flags);
 			spin_lock_irqsave(q->queue_lock, flags);
 			blk_start_queue(q);

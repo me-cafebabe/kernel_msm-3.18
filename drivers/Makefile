@@ -171,4 +171,5 @@ obj-$(CONFIG_BIF)		+= bif/
 
 obj-$(CONFIG_SENSORS_SSC)	+= sensors/
 
-obj-$(CONFIG_FINGERPRINT)	+= fingerprint/
+# <t-base drivers
+obj-$(CONFIG_MOBICORE_DRIVER)	+= gud/
