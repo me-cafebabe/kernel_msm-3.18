@@ -107,7 +107,7 @@ EXPORT_SYMBOL(sched_get_nr_running_avg);
  */
 void sched_update_nr_prod(int cpu, long delta, bool inc)
 {
-	s64 diff;
+	int diff;
 	s64 curr_time;
 	unsigned long flags, nr_running;
 
