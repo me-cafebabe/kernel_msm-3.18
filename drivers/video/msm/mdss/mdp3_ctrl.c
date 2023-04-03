@@ -1820,8 +1820,7 @@ static int mdp3_ctrl_lut_update(struct msm_fb_data_type *mfd,
 		return -EINVAL;
 	}
 
-	if (cmap->start > MDP_LUT_SIZE || cmap->len > MDP_LUT_SIZE ||
-				(cmap->start + cmap->len > MDP_LUT_SIZE)) {
+	if (cfg->cmap.start + cfg->cmap.len > MDP_LUT_SIZE) {
 		pr_err("Invalid arguments\n");
 		return  -EINVAL;
 	}

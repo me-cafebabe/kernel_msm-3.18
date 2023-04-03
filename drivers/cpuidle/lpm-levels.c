@@ -1,5 +1,4 @@
 /* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
- * Copyright (C) 2016 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1316,7 +1315,7 @@ static int lpm_probe(struct platform_device *pdev)
 	int ret;
 	int size;
 	struct kobject *module_kobj = NULL;
-	get_online_cpus();
+
 	lpm_root_node = lpm_of_parse_cluster(pdev);
 
 	if (IS_ERR_OR_NULL(lpm_root_node)) {
@@ -1333,6 +1332,7 @@ static int lpm_probe(struct platform_device *pdev)
 	 * core.  BUG in existing code but no known issues possibly because of
 	 * how late lpm_levels gets initialized.
 	 */
+	register_hotcpu_notifier(&lpm_cpu_nblk);
 	get_cpu();
 	on_each_cpu(setup_broadcast_timer, (void *)true, 1);
 	put_cpu();
@@ -1342,8 +1342,7 @@ static int lpm_probe(struct platform_device *pdev)
 	ret = remote_spin_lock_init(&scm_handoff_lock, SCM_HANDOFF_LOCK_ID);
 	if (ret) {
 		pr_err("%s: Failed initializing scm_handoff_lock (%d)\n",
-		       __func__, ret);
-		put_online_cpus();
+			__func__, ret);
 		return ret;
 	}
 
@@ -1353,7 +1352,6 @@ static int lpm_probe(struct platform_device *pdev)
 	register_cluster_lpm_stats(lpm_root_node, NULL);
 
 	ret = cluster_cpuidle_register(lpm_root_node);
-	put_online_cpus();
 	if (ret) {
 		pr_err("%s()Failed to register with cpuidle framework\n",
 				__func__);
@@ -1367,7 +1365,7 @@ static int lpm_probe(struct platform_device *pdev)
 		ret = -ENOENT;
 		goto failed;
 	}
-	register_hotcpu_notifier(&lpm_cpu_nblk);
+
 	ret = create_cluster_lvl_nodes(lpm_root_node, module_kobj);
 	if (ret) {
 		pr_err("%s(): Failed to create cluster level nodes\n",
