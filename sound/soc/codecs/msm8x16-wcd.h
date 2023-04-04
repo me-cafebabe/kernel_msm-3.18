@@ -1,5 +1,4 @@
 /* Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
- * Copyright (C) 2019 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -56,8 +55,6 @@
 #define DEFAULT_MULTIPLIER 800
 #define DEFAULT_GAIN 9
 #define DEFAULT_OFFSET 100
-
-#define AW87329_PA
 
 extern const u8 msm8x16_wcd_reg_readable[MSM8X16_WCD_CACHE_SIZE];
 extern const u8 msm8x16_wcd_reg_readonly[MSM8X16_WCD_CACHE_SIZE];
