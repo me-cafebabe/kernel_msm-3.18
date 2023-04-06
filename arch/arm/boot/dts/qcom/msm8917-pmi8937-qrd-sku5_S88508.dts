@@ -27,5 +27,3 @@
 &int_codec {
 	qcom,model = "msm8917-sku5-snd-card";
 };
-
-#include "../xiaomi/wingtech/msm8917/msm8917.dtsi"
