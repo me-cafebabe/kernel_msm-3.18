@@ -778,6 +778,7 @@ static int32_t msm_cci_i2c_read(struct v4l2_subdev *sd,
 	int32_t read_words = 0, exp_words = 0;
 	int32_t index = 0, first_byte = 0;
 	uint32_t i = 0;
+	uint32_t retry = 0;
 	enum cci_i2c_master_t master;
 	enum cci_i2c_queue_t queue = QUEUE_1;
 	struct cci_device *cci_dev = NULL;
@@ -906,8 +907,15 @@ static int32_t msm_cci_i2c_read(struct v4l2_subdev *sd,
 		rc = 0;
 	}
 
-	read_words = msm_camera_io_r_mb(cci_dev->base +
+	for (retry = 0; retry < 3; retry++) {
+		read_words = msm_camera_io_r_mb(cci_dev->base +
 		CCI_I2C_M0_READ_BUF_LEVEL_ADDR + master * 0x100);
+		pr_err("test s5k5e8 add %s:%d read_words = %d, exp words = %d\n", __func__,
+			__LINE__, read_words, exp_words);
+
+		if (read_words > 0)
+			break;
+	}
 	exp_words = ((read_cfg->num_byte / 4) + 1);
 	if (read_words != exp_words) {
 		pr_err("%s:%d read_words = %d, exp words = %d\n", __func__,
