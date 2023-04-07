@@ -8,3 +8,8 @@ source "drivers/platform/chrome/Kconfig"
 if ARCH_MSM
 source "drivers/platform/msm/Kconfig"
 endif
+
+config MACH_XIAOMI_PRADA
+	bool "PRADA"
+	help
+	  PRADA
