@@ -12,6 +12,7 @@
  */
 
 #include "msm8937-pinctrl.dtsi"
+#include "msm8937-camera-sensor-qrd.dtsi"
 
 &soc {
 	gpio_keys {
@@ -28,11 +29,6 @@
 			linux,code = <115>;
 			debounce-interval = <15>;
 		};
-	};
-
-
-	boardinfo {
-		compatible = "wt:boardinfo";
 	};
 };
 
