@@ -512,6 +512,7 @@ void gup_leave_update_mode(void)
 
 static u8 gup_enter_update_judge(st_fw_head *fw_head)
 {
+#if 0
 	u16 u16_tmp;
 	s32 i = 0;
 	u32 fw_len = 0;
@@ -591,6 +592,10 @@ static u8 gup_enter_update_judge(st_fw_head *fw_head)
 	}
 
 	return FAIL;
+#else
+	GTP_INFO("Force Updating Firmware...");
+	return SUCCESS;
+#endif
 }
 
 
@@ -2853,7 +2858,7 @@ static s32 gup_burn_fw_proc(struct i2c_client *client, u16 start_addr, s32 start
 
 	GTP_DEBUG("burn firmware: 0x%04X, %d bytes, start_index: 0x%04X", start_addr, burn_len, start_index);
 
-	ret = i2c_write_bytes(client, start_addr, (u8*)&gtp_default_FW_fl[FW_HEAD_LENGTH + start_index], burn_len);
+	ret = i2c_write_bytes(client, start_addr, (u8*)&gtp_default_FW[FW_HEAD_LENGTH + start_index], burn_len);
 	if (ret < 0) {
 		GTP_ERROR("burn 0x%04X, %d bytes failed!", start_addr, burn_len);
 		return FAIL;
@@ -2882,11 +2887,11 @@ static s32 gup_check_and_repair(struct i2c_client *client, u16 start_addr, s32 s
 			break;
 		}
 		for (i = 0; i < cmp_len; ++i) {
-			if (chk_cmp_buf[i] != gtp_default_FW_fl[FW_HEAD_LENGTH + start_index +i]) {
+			if (chk_cmp_buf[i] != gtp_default_FW[FW_HEAD_LENGTH + start_index +i]) {
 				chk_fail = 1;
-				i2c_write_bytes(client, cmp_addr+i, &gtp_default_FW_fl[FW_HEAD_LENGTH + start_index + i], cmp_len-i);
+				i2c_write_bytes(client, cmp_addr+i, &gtp_default_FW[FW_HEAD_LENGTH + start_index + i], cmp_len-i);
 				GTP_ERROR("Check failed index: %d(%d != %d), redownload chuck", i, chk_cmp_buf[i],
-						gtp_default_FW_fl[FW_HEAD_LENGTH + start_index +i]);
+						gtp_default_FW[FW_HEAD_LENGTH + start_index +i]);
 				break;
 			}
 		}
@@ -3033,8 +3038,8 @@ static s32 gup_prepare_fl_fw(char *path, st_fw_head *fw_head)
 	update_msg.fw_total_len = update_msg.file->f_op->llseek(update_msg.file, 0, SEEK_END);
 
 	update_msg.force_update = 0xBE;
-	if (update_msg.fw_total_len != sizeof(gtp_default_FW_fl)) {
-		GTP_ERROR("Inconsistent fw size. default size: %d(%dK), file size: %d(%dK)", sizeof(gtp_default_FW_fl), sizeof(gtp_default_FW_fl)/1024, update_msg.fw_total_len, update_msg.fw_total_len/1024);
+	if (update_msg.fw_total_len != sizeof(gtp_default_FW)) {
+		GTP_ERROR("Inconsistent fw size. default size: %d(%dK), file size: %d(%dK)", sizeof(gtp_default_FW), sizeof(gtp_default_FW)/1024, update_msg.fw_total_len, update_msg.fw_total_len/1024);
 		set_fs(update_msg.old_fs);
 		_CLOSE_FILE(update_msg.file);
 		return FAIL;
@@ -3044,7 +3049,7 @@ static s32 gup_prepare_fl_fw(char *path, st_fw_head *fw_head)
 	GTP_DEBUG("Fimrware size: %d(%dK)", update_msg.fw_total_len, update_msg.fw_total_len / 1024);
 
 	update_msg.file->f_op->llseek(update_msg.file, 0, SEEK_SET);
-	ret = update_msg.file->f_op->read(update_msg.file, (char*)gtp_default_FW_fl,
+	ret = update_msg.file->f_op->read(update_msg.file, (char*)gtp_default_FW,
 							update_msg.fw_total_len + FW_HEAD_LENGTH,
 								&update_msg.file->f_pos);
 	update_msg.fw_total_len  += FW_HEAD_LENGTH;
@@ -3069,10 +3074,10 @@ static u8 gup_check_update_file_fl(struct i2c_client *client, st_fw_head* fw_hea
 			return FAIL;
 		}
 	} else {
-		update_msg.fw_total_len = sizeof(gtp_default_FW_fl);
+		update_msg.fw_total_len = sizeof(gtp_default_FW);
 	}
 
-	memcpy(fw_head, gtp_default_FW_fl, FW_HEAD_LENGTH);
+	memcpy(fw_head, gtp_default_FW, FW_HEAD_LENGTH);
 	GTP_INFO("FILE HARDWARE INFO: %02x%02x%02x%02x", fw_head->hw_info[0], fw_head->hw_info[1], fw_head->hw_info[2], fw_head->hw_info[3]);
 	GTP_INFO("FILE PID: %s", fw_head->pid);
 	fw_head->vid = ((fw_head->vid & 0xFF00) >> 8) + ((fw_head->vid & 0x00FF) << 8);
@@ -3081,7 +3086,7 @@ static u8 gup_check_update_file_fl(struct i2c_client *client, st_fw_head* fw_hea
 
 	fw_checksum = 0;
 	for(i = FW_HEAD_LENGTH; i < update_msg.fw_total_len; i += 2) {
-		fw_checksum += (gtp_default_FW_fl[i] << 8) + gtp_default_FW_fl[i+1];
+		fw_checksum += (gtp_default_FW[i] << 8) + gtp_default_FW[i+1];
 	}
 	ret = SUCCESS;
 
