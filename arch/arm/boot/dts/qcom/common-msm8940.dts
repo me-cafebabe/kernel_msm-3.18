@@ -1,0 +1,3 @@
+/dts-v1/;
+
+#include "msm8940-moto-common.dtsi"
