@@ -164,6 +164,10 @@ ifeq ($(CONFIG_MMI_DEVICE_DTBS),y)
 # Add 1k of padding to the DTBs to allow for environment variables
 # to be runtime added by the bootloader (i.e. /chosen properties)
 DTC_FLAGS := -p 1024
+dtb-y += common-msm8917.dtb
+dtb-y += common-msm8920.dtb
+dtb-y += common-msm8937.dtb
+dtb-y += common-msm8940.dtb
 endif
 
 dtb-$(CONFIG_ARCH_MDM9640) += mdm9640-sim.dtb \
