@@ -153,7 +153,7 @@ static struct msg2xxx_data *this_data;
 #define FW_ADDR_MSG_TP      (0x4C>>1)
 #define FW_ADDR_MSG         (0xC4>>1)
 
-static u8 g_ic_type = 0;
+static u8 g_ic_type = 2;
 static int int_flag=0;
 
 static	struct input_dev *input=NULL;
@@ -532,6 +532,8 @@ static u16 _msg_GetVersion_MoreTime(void)
 #endif
 static u8 _msg_GetIcType(void)
 {
+	return g_ic_type;
+
 	_msg_resetHW();
     _msg_EnterSerialDebugMode();
     mdelay ( 300 );
