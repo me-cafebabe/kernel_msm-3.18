@@ -1,10 +1,4 @@
-&msm_gpio {
-	/delete-node/ SL610W1D_pins;
-};
-
 &soc {
-	/delete-node/ flashlight;
-
 	gpio-leds {
 		compatible = "gpio-leds";
 		status = "ok";
@@ -15,11 +9,14 @@
 			linux,default-trigger = "gpio_flash_trigger";
 		};
 	};
-};
 
-&led_flash0 {
-	qcom,flash-source = <&gpio_flash>;
-	qcom,torch-source = <&gpio_flash>;
+	led_flash0: qcom,camera-led-flash {
+		cell-index = <0>;
+		compatible = "qcom,camera-led-flash";
+		qcom,flash-type = <3>;
+		qcom,flash-source = <&gpio_flash>;
+		qcom,torch-source = <&gpio_flash>;
+	};
 };
 
 &i2c_3 {
