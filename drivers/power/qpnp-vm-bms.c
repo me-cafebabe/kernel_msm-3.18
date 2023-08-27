@@ -3983,14 +3983,6 @@ static int qpnp_vm_bms_probe(struct spmi_device *spmi)
 
 	schedule_delayed_work(&chip->monitor_soc_work, 0);
 
-	/*
-	 * schedule a work to check if the userspace vmbms module
-	 * has registered. Fall-back to voltage-based-soc reporting
-	 * if it has not.
-	 */
-	schedule_delayed_work(&chip->voltage_soc_timeout_work,
-		msecs_to_jiffies(chip->dt.cfg_voltage_soc_timeout_ms));
-
 	pr_info("probe success: soc=%d vbatt=%d ocv=%d warm_reset=%d\n",
 					get_prop_bms_capacity(chip), vbatt,
 					chip->last_ocv_uv, chip->warm_reset);
