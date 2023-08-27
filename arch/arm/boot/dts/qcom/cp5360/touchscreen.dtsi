@@ -1,6 +1,7 @@
 &i2c_5 {
 	mstar@26 {
 		compatible = "mstar,msg2xxx";
+		mstar,name = "msg2xxx";
 		interrupt-parent = <&msm_gpio>;
 		interrupts = <0x0d 0x02>;
 		mstar,button-map = <0xac 0x9e 0x8b>;
