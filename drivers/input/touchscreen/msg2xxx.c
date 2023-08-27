@@ -309,7 +309,7 @@ static void tp_print_create_entry(void);
 //#define TP_DEBUG_ON
 #ifdef TP_DEBUG_ON
 #include <linux/proc_fs.h>
-#define DEBUG_AUTHORITY 0777
+#define DEBUG_AUTHORITY 0644
 static struct proc_dir_entry *tp_debug = NULL;
 static struct proc_dir_entry *debug_on = NULL;
 #define PROC_TP_DEBUG      "tp_debug"
@@ -1777,7 +1777,7 @@ module_exit(_msg_ts_exit);
 #ifdef FIRMWARE_UPDATE
 
 #define FW_ADDR_MSG_UPDATE (0x4c>>1)
-#define CTP_AUTHORITY 0777  //modify: 0777Ϊ��apk�������ܣ�0664Ϊ�ر�apk��������
+#define CTP_AUTHORITY 0644  //modify: 0644Ϊ��apk�������ܣ�0664Ϊ�ر�apk��������
 static U8 temp[40][1024];
 static U32 crc32_table[256];
 static S32 FwDataCnt;
@@ -2353,7 +2353,7 @@ ssize_t DrvMainFirmwareChipTypeStore(struct device *pDevice, struct device_attri
     return nSize;
 }
 
-static DEVICE_ATTR(chip_type, 0777,DrvMainFirmwareChipTypeShow, DrvMainFirmwareChipTypeStore);
+static DEVICE_ATTR(chip_type, 0644,DrvMainFirmwareChipTypeShow, DrvMainFirmwareChipTypeStore);
 
 static void _msg_create_file_for_fwUpdate(void)
 {
@@ -2508,7 +2508,7 @@ static ssize_t proc_data_write(struct file *file,
     firmware_data_store(NULL, NULL, user_buf, 0);
     return count;
 }
-#define CTP_AUTHORITY_PROC 0777
+#define CTP_AUTHORITY_PROC 0644
 static const struct file_operations fw_version_proc_fops = {
 	.owner		= THIS_MODULE,
 	.read		= proc_version_read,
@@ -2802,7 +2802,7 @@ static int _msg_create_file_for_proximity_proc(void)
     if (!msg_tp_ps)
 	return -ENOMEM;
 
-    msg_ps_proc = proc_create("ps", 0777, msg_tp_ps,&ps_proc_fops);
+    msg_ps_proc = proc_create("ps", 0644, msg_tp_ps,&ps_proc_fops);
     if (msg_ps_proc == NULL)
     {
         TPD_DEBUG("create_proc_entry tp_ps failed\n");
@@ -3664,7 +3664,7 @@ static ITO_TEST_RET ito_test_interface(void)
 }
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
-#define ITO_TEST_AUTHORITY 0777
+#define ITO_TEST_AUTHORITY 0644
 static struct proc_dir_entry *msg_ito_test = NULL;
 static struct proc_dir_entry *debug = NULL;
 static struct proc_dir_entry *ito_test = NULL;
@@ -4248,7 +4248,7 @@ ito_end:
 }
 
 #include <linux/proc_fs.h>
-#define ITO_TEST_M_AUTHORITY 0777
+#define ITO_TEST_M_AUTHORITY 0644
 static struct proc_dir_entry *msg_ito_test_m = NULL;
 static struct proc_dir_entry *debug_m = NULL;
 static struct proc_dir_entry *ito_test_m = NULL;
@@ -4376,7 +4376,7 @@ static void _msg_create_file_for_ito_test(void)
 #ifdef TP_PRINT
 #include <linux/proc_fs.h>
 
-#define TP_PRINT_AUTHORITY 0777
+#define TP_PRINT_AUTHORITY 0644
 #define PROC_TP_PRINT_MSG   "msgtpp"
 #define PROC_TP_PRINT_NODE  "tpp"
 
