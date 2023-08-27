@@ -1543,7 +1543,6 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	if(0==_msg_GetIcType())
 	{
 	    printk("The currnet ic is not MSG\n");
-	    goto error_mutex_destroy;
 	}
 
 	//read fw-version,zhanghaibin,20140923
@@ -1682,7 +1681,6 @@ exit_create_singlethread:
 err_ps_input_register:
 	input_free_device(data->ps_input_dev);
 #endif
-error_mutex_destroy:
 	mutex_destroy(&data->int_lock);
 free_reset_gpio:
 	if (gpio_is_valid(pdata->reset_gpio))
