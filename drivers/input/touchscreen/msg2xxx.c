@@ -542,7 +542,8 @@ static u8 _msg_GetIcType(void)
     _msg_WriteReg ( 0x3C, 0x60, 0xAA55 );
     // get ic type
     g_ic_type = (0xff)&(_msg_ReadReg(0x1E, 0xCC));
-    printk("_msg_GetIcType,g_ic_type=%d",g_ic_type);
+    printk("_msg_GetIcType,g_ic_type=%d (will force to 2)\n",g_ic_type);
+    g_ic_type = 2;
 
     if(g_ic_type!=1//msg2133
         &&g_ic_type!=2//msg21xxA
