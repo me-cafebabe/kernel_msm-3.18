@@ -143,8 +143,8 @@ static struct msg2xxx_data *this_data;
 #define TPD_DEBUG(arg...)
 #endif
 
-#define LCD_WIDTH               (480)   //modify : ·Ö±æÂÊ£¬¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿öÐÞ¸Ä¡£
-#define LCD_HEIGHT              (854)   //modify : ·Ö±æÂÊ£¬¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿öÐÞ¸Ä¡£
+#define LCD_WIDTH               (480)   //modify : ï¿½Ö±ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸Ä¡ï¿½
+#define LCD_HEIGHT              (854)   //modify : ï¿½Ö±ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸Ä¡ï¿½
 #define TPD_WIDTH               (2048)
 #define TPD_HEIGHT              (2048)
 #define TPD_OK                  (0)
@@ -268,7 +268,7 @@ static struct attribute_group tp_ps_attribute_group = {
 #endif
 
 #define MAX_KEY_NUM    (3)
-static int tpd_key_array[MAX_KEY_NUM] = {0};//{ KEY_APPSELECT, KEY_BACK,KEY_HOMEPAGE,KEY_SEARCH};//modify : ¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿öÐÞ¸Ä
+static int tpd_key_array[MAX_KEY_NUM] = {0};//{ KEY_APPSELECT, KEY_BACK,KEY_HOMEPAGE,KEY_SEARCH};//modify : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 
 #define FIRMWARE_UPDATE
 #ifdef FIRMWARE_UPDATE
@@ -500,7 +500,7 @@ static void _msg_GetVersion(void)
     }
     printk(KERN_ERR "curr_ic_major=%d,curr_ic_minor=%d\n",curr_ic_major,curr_ic_minor);
 }
-//modify :µ±Ç°ÏîÄ¿Ê¹ÓÃ¸÷¼Òtp³§µÄÖ÷°æ±¾ºÅ£¬±ØÐë¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿öÔö¼õÐÞ¸Ä
+//modify :ï¿½ï¿½Ç°ï¿½ï¿½Ä¿Ê¹ï¿½Ã¸ï¿½ï¿½ï¿½tpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½Å£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 #ifdef AUTO_FIRMWARE_UPDATE
 #define TP_OF_XXX1 1
 #define TP_OF_XXX2 2
@@ -514,7 +514,7 @@ static u16 _msg_GetVersion_MoreTime(void)
         TPD_DEBUG_UPDATE("version_check_time=%d;curr_ic_major=%d;curr_ic_minor=%d \n",version_check_time,curr_ic_major,curr_ic_minor);
         if(TP_OF_XXX1==curr_ic_major
            ||TP_OF_XXX2==curr_ic_major
-           ||TP_OF_XXX3==curr_ic_major)//modify :µ±Ç°ÏîÄ¿Ê¹ÓÃ¸÷¼Òtp³§µÄÖ÷°æ±¾ºÅ£¬±ØÐë¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿öÔö¼õÐÞ¸Ä
+           ||TP_OF_XXX3==curr_ic_major)//modify :ï¿½ï¿½Ç°ï¿½ï¿½Ä¿Ê¹ï¿½Ã¸ï¿½ï¿½ï¿½tpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½Å£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
         {
             break;
         }
@@ -987,7 +987,7 @@ static void msg_do_work(struct work_struct *work)
 }
 
 
-static void _msg_init_input(void)//modify :ÊäÈë×ÓÏµÍ³£¬¸ù¾ÝÏîÄ¿ÐÞ¸Ä
+static void _msg_init_input(void)//modify :ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Þ¸ï¿½
 {
 	int err;
 	int i;
@@ -1022,12 +1022,12 @@ static void _msg_init_input(void)//modify :ÊäÈë×ÓÏµÍ³£¬¸ù¾ÝÏîÄ¿ÐÞ¸Ä
 	TPD_DEBUG("error = %d\n", err);
 }
 
-static void _msg_set_rst_high(void)//modify: reset½ÅÀ­¸ß, ¸ù¾ÝÏîÄ¿ÐÞ¸Ä
+static void _msg_set_rst_high(void)//modify: resetï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Þ¸ï¿½
 {
      gpio_set_value(this_data->pdata->reset_gpio, 1);
 }
 
-static void _msg_set_rst_low(void)//modify: reset½ÅÀ­µÍ, ¸ù¾ÝÏîÄ¿ÐÞ¸Ä
+static void _msg_set_rst_low(void)//modify: resetï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Þ¸ï¿½
 {
     gpio_set_value(this_data->pdata->reset_gpio, 0);
 }
@@ -1040,11 +1040,11 @@ static void _msg_resetHW(void)
     mdelay(100);
 }
 
-static void _msg_disable_irq(void)//modify: ÖÐ¶Ïdisableº¯Êý, ¸ù¾ÝÏîÄ¿ÐÞ¸Ä
+static void _msg_disable_irq(void)//modify: ï¿½Ð¶ï¿½disableï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Þ¸ï¿½
 {
 	disable_irq_nosync(tpd_i2c_client->irq);
 }
-static void _msg_enable_irq(void)//modify: ÖÐ¶Ïenableº¯Êý, ¸ù¾ÝÏîÄ¿ÐÞ¸Ä
+static void _msg_enable_irq(void)//modify: ï¿½Ð¶ï¿½enableï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Þ¸ï¿½
 {
 	enable_irq(tpd_i2c_client->irq);
 }
@@ -1785,11 +1785,11 @@ static struct i2c_driver tpd_i2c_driver =
     .id_table = tpd_id,
 };
 
-static void _msg_register_device_and_driver(void)//modify :¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿ö×¢²áÉè±¸ÓëÇý¶¯
+static void _msg_register_device_and_driver(void)//modify :ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	i2c_add_driver(&tpd_i2c_driver);
 }
-static void _msg_del_device_and_driver(void)//modify :¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿öÐ¶ÔØÉè±¸ºÍÇý¶¯
+static void _msg_del_device_and_driver(void)//modify :ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
     i2c_del_driver(&tpd_i2c_driver);
 }
@@ -1812,7 +1812,7 @@ module_exit(_msg_ts_exit);
 #ifdef FIRMWARE_UPDATE
 
 #define FW_ADDR_MSG_UPDATE (0x4c>>1)
-#define CTP_AUTHORITY 0777  //modify: 0777Îª´ò¿ªapkÉý¼¶¹¦ÄÜ£¬0664Îª¹Ø±ÕapkÉý¼¶¹¦ÄÜ
+#define CTP_AUTHORITY 0777  //modify: 0777Îªï¿½ï¿½apkï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½0664Îªï¿½Ø±ï¿½apkï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 static U8 temp[40][1024];
 static U32 crc32_table[256];
 static S32 FwDataCnt;
@@ -2416,7 +2416,7 @@ static void _msg_create_file_for_fwUpdate(void)
     dev_set_drvdata(msg2xxx_firmware_cmd_dev, NULL);
 }
 #ifdef AUTO_FIRMWARE_UPDATE
-//modify: ¸ù¾ÝÏîÄ¿Êµ¼ÊÊ¹ÓÃtp³§Ôö¼õÐÞ¸Ä¡£
+//modify: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½Ê¹ï¿½ï¿½tpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸Ä¡ï¿½
 static unsigned char tp_of_xxx1_update_bin[]=
 {
     #include "tp_of_xxx1_update_bin.i"
@@ -2457,7 +2457,7 @@ static void _msg_auto_updateFirmware(void)
 
     tp_type=_msg_GetVersion_MoreTime();
 
-    //modify :µ±Ç°ÏîÄ¿Ê¹ÓÃ¸÷¼Òtp³§µÄÖ÷°æ±¾ºÅ£¬±ØÐë¸ù¾ÝÏîÄ¿Êµ¼ÊÇé¿öÔö¼õÐÞ¸Ä
+    //modify :ï¿½ï¿½Ç°ï¿½ï¿½Ä¿Ê¹ï¿½Ã¸ï¿½ï¿½ï¿½tpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½Å£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
     if(TP_OF_XXX1==tp_type)
     {
         update_bin = tp_of_xxx1_update_bin;
