@@ -1663,6 +1663,7 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	ctp_assist_register_attr("tp_vendor",&msg2xxx_tp_vendor_show,NULL);
 #endif
 
+    _msg_enable_irq();
     TPD_DEBUG("TPD probe done\n");
 
     return TPD_OK;
