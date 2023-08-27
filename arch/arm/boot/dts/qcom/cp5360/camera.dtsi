@@ -1,4 +1,4 @@
-&tlmm_pinmux {
+&msm_gpio {
 	/delete-node/ SL610W1D_pins;
 };
 

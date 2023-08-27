@@ -1,4 +1,4 @@
-&tlmm_pinmux {
+&msm_gpio {
 	sdhc2_cd_pin {
 		cd_off {
 			/delete-property/ bias-disable;
