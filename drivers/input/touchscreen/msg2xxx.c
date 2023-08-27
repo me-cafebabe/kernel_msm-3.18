@@ -148,7 +148,7 @@ static struct msg2xxx_data *this_data;
 #define TPD_WIDTH               (2048)
 #define TPD_HEIGHT              (2048)
 #define TPD_OK                  (0)
-#define MAX_TOUCH_NUM           (5)
+#define MAX_TOUCH_NUM           (2)
 #define REPORT_PACKET_LENGTH    (43)
 #define FW_ADDR_MSG_TP      (0x4C>>1)
 #define FW_ADDR_MSG         (0xC4>>1)
