@@ -1,0 +1,13 @@
+&modem_adsp_mem {
+	reg = <0x00 0x88000000 0x00 0x4000000>;
+};
+
+&peripheral_mem {
+	reg = <0x00 0x8c000000 0x00 0x500000>;
+};
+
+&pm8909_pon {
+	qcom,pon_1 {
+		qcom,support-reset = <0x00>;
+	};
+};

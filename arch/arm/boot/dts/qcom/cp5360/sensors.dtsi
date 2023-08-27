@@ -1,0 +1,38 @@
+&i2c_1 {
+	qcom,fs-clk-div = <0x5d>;
+	qcom,high-time-clk-div = <0x5d>;
+	qcom,noise-rjct-scl = <0x02>;
+	qcom,noise-rjct-sda = <0x02>;
+
+	di@1e {
+		di,ps-distance-table = <0x3db 0x1e2 0x137 0x116 0xfd 0x24>;
+		di,ps-thdh = <0x1c2>;
+		di,ps-thdl = <0x15e>;
+	};
+
+	kionix@e {
+		compatible = "kionix,kionix_accel";
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <0x60 0x02>;
+		kionix,accel-direction = <0x02>;
+		kionix,accel-g-range = <0x02>;
+		kionix,accel-irq-use-drdy = <0x00>;
+		kionix,accel-res = <0x0c>;
+		kionix,min-interval = <0x05>;
+		kionix,poll-interval = <0xc8>;
+		reg = <0x0e>;
+		vdd-supply = <&pm8909_l17>;
+		vio-supply = <&pm8909_l6>;
+	};
+
+	memsic@15 {
+		compatible = "mxc622x,memsic";
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <0x60 0x02>;
+		memsic,irq-gpio = <&msm_gpio 0x60 0x00>;
+		mxc622x,direction = <0x00>;
+		reg = <0x15>;
+		vdd-supply = <&pm8909_l17>;
+		vio-supply = <&pm8909_l6>;
+	};
+};

@@ -1,0 +1,18 @@
+&i2c_5 {
+	mstar@26 {
+		compatible = "mstar,msg2xxx";
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <0x0d 0x02>;
+		mstar,button-map = <0xac 0x9e 0x8b>;
+		mstar,display-coords = <0x00 0x00 0x2d0 0x500>;
+		mstar,family-id = <0x02>;
+		mstar,i2c-pull-up;
+		mstar,irq-gpio = <&msm_gpio 0x0d 0x00>;
+		mstar,no-force-update;
+		mstar,panel-coords = <0x00 0x00 0x2d0 0x564>;
+		mstar,reset-gpio = <&msm_gpio 0x0c 0x00>;
+		reg = <0x26>;
+		vdd-supply = <&pm8909_l17>;
+		vcc_i2c-supply = <&pm8909_l6>;
+	};
+};

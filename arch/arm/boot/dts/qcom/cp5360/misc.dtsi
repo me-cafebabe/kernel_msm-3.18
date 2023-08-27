@@ -1,0 +1,7 @@
+&soc {
+	gpio_keys {
+		vol_up {
+			/delete-property/ gpio-key,wakeup;
+		};
+	};
+};
