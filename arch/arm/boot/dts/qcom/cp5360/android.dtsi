@@ -1,7 +1,6 @@
 &firmware {
 	android {
 		fstab {
-			/delete-node/ vendor;
 			system_fstab: system {
 				compatible = "android,system";
 				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/system";
@@ -12,4 +11,9 @@
 			};
 		};
 	};
+};
+
+&vendor_fstab {
+	dev = "/dev/block/platform/soc/7824900.sdhci/by-name/cache";
+	fsmgr_flags = "wait";
 };
