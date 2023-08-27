@@ -530,36 +530,6 @@ static u16 _msg_GetVersion_MoreTime(void)
     return curr_ic_major;
 }
 #endif
-static u8 _msg_GetIcType(void)
-{
-	return g_ic_type;
-
-	_msg_resetHW();
-    _msg_EnterSerialDebugMode();
-    mdelay ( 300 );
-
-    // stop mcu
-    _msg_WriteReg8Bit ( 0x0F, 0xE6, 0x01 );
-    // disable watch dog
-    _msg_WriteReg ( 0x3C, 0x60, 0xAA55 );
-    // get ic type
-    g_ic_type = (0xff)&(_msg_ReadReg(0x1E, 0xCC));
-    printk("_msg_GetIcType,g_ic_type=%d (will force to 2)\n",g_ic_type);
-    g_ic_type = 2;
-
-    if(g_ic_type!=1//msg2133
-        &&g_ic_type!=2//msg21xxA
-        &&g_ic_type!=3)//msg26xx
-    {
-        g_ic_type = 0;
-    }
-
-    _msg_ExitSerialDebugMode();
-    _msg_resetHW();
-
-    return g_ic_type;
-
-}
 
 static U8 _msg_CalChecksum( U8 *msg, S32 s32Length )
 {
@@ -1542,11 +1512,6 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	tpd_i2c_client = client;
 
 	mutex_init(&data->int_lock);
-
-	if(0==_msg_GetIcType())
-	{
-	    printk("The currnet ic is not MSG\n");
-	}
 
 	//read fw-version,zhanghaibin,20140923
 	_msg_GetVersion();
