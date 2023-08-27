@@ -14,6 +14,7 @@
 
 #include "msm8909-qrd-skuc.dtsi"
 
+#include "cp5360/android.dtsi"
 #include "cp5360/battery.dtsi"
 #include "cp5360/camera.dtsi"
 #include "cp5360/display.dtsi"
