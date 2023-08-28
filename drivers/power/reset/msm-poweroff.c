@@ -272,13 +272,12 @@ static void msm_restart_prepare(const char *cmd)
 
 #ifdef CONFIG_MSM_DLOAD_MODE
 
-	/* Write download mode flags if we're panic'ing
-	 * Write download mode flags if restart_mode says so
+	/* Write download mode flags if restart_mode says so
 	 * Kill download mode if master-kill switch is set
 	 */
 
 	set_dload_mode(download_mode &&
-			(in_panic || restart_mode == RESTART_DLOAD));
+			(restart_mode == RESTART_DLOAD));
 #endif
 
 	if (qpnp_pon_check_hard_reset_stored()) {
