@@ -32,8 +32,6 @@ struct q6v5_data {
 	struct clk *reg_clk;	   /* CPU access registers */
 	struct clk *gpll0_mss_clk; /* GPLL0 to MSS connection */
 	struct clk *rom_clk;	   /* Boot ROM */
-	struct clk *snoc_axi_clk;
-	struct clk *mnoc_axi_clk;
 	struct clk *qdss_clk;
 	struct clk *qpic_clk;
 	void __iomem *axi_halt_base; /* Halt base of q6, mss,
