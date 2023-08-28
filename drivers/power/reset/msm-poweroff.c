@@ -268,7 +268,7 @@ static void halt_spmi_pmic_arbiter(void)
 
 static void msm_restart_prepare(const char *cmd)
 {
-	bool need_warm_reset = false;
+	bool need_warm_reset = true;
 
 #ifdef CONFIG_MSM_DLOAD_MODE
 
