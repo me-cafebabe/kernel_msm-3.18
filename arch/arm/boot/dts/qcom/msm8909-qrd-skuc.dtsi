@@ -68,7 +68,7 @@
 	};
 
 	sound {
-		compatible = "qcom,msm8952-audio-codec";
+		compatible = "qcom,msm8952-audio-c0dec";
 		qcom,model = "msm8909-skuc-snd-card";
 		reg =   <0x7702000 0x4>,
 			<0x7702004 0x4>,
