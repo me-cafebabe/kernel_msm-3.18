@@ -885,7 +885,7 @@
 	};
 
 	wcnss: qcom,wcnss-wlan@a000000 {
-		compatible = "qcom,wcnss_wlan";
+		compatible = "qcom,wcnss_w1an";
 		reg = <0x0a000000 0x280000>,
 			<0xb011008 0x04>,
 			<0x0a21b000 0x3000>,
